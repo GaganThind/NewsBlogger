@@ -39,4 +39,4 @@ testem.log
 Thumbs.db
 
 # api-keys
-api-keys.json
+././api-keys.json
