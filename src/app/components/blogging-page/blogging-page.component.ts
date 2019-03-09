@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FetchPostsService } from '../../services/posts/fetch-posts.service';
 import { Posts } from '../../models/posts.model';
+import { TheGuardianService } from '../../services/posts/the-guardian.service';
 
 @Component({
   selector: 'app-blogging-page',
@@ -10,13 +10,13 @@ import { Posts } from '../../models/posts.model';
 export class BloggingPageComponent implements OnInit {
 
   private posts: Posts[] = [];
-  constructor(private postService: FetchPostsService) { }
+  constructor(private theGuardianService: TheGuardianService) { }
 
   ngOnInit() {
     this.getPostsDataFromService();
   }
 
   getPostsDataFromService() {
-    this.posts = this.postService.fetchNewsPosts();
+    this.theGuardianService.fetchNewsPosts();
   }
 }

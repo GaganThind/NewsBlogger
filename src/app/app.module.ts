@@ -8,7 +8,8 @@ import { NavComponent } from './components/nav/nav.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { BloggingPageComponent } from './components/blogging-page/blogging-page.component';
 import { BlogPostComponent } from './components/blog-post/blog-post.component';
-import { FetchPostsService } from './services/posts/fetch-posts.service';
+import { TheGuardianService } from './services/posts/the-guardian.service';
+import { UrlResolverService } from './services/posts/url-resolver.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,10 @@ import { FetchPostsService } from './services/posts/fetch-posts.service';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [FetchPostsService],
+  providers: [
+    TheGuardianService,
+    UrlResolverService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

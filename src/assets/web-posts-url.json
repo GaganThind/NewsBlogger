@@ -1,0 +1,10 @@
+[
+    {
+        "id":"THE_GUARDIAN",
+        "value":"https://content.guardianapis.com/search?api-key="
+    },
+    {
+        "id":"NEW_YORK_TIMES",
+        "value":"https://api.nytimes.com/svc/topstories/v2/home.json?api-key="
+    }
+]
