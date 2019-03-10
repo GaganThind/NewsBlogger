@@ -1,26 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UrlResolverService } from './url-resolver.service';
+import { Posts } from '../../models/posts.model';
+import { CommonServicesService } from './common-services.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class TheGuardianService {
+export class TheGuardianService extends CommonServicesService{
 
-  private THE_GUARDIAN_SERVICE_URL: string;
+  private posts: Posts[] = [];
+  
+  constructor(httpClient: HttpClient) { super(httpClient) }
 
-  constructor(private urlResolverSvc: UrlResolverService) { }
-
-  fetchNewsPosts() {
-    const THE_GUARDIAN = 'THE_GUARDIAN';
-    this.THE_GUARDIAN_SERVICE_URL = this.getServiceURL(THE_GUARDIAN);
+  fetchNewsPosts(url: string) {
+    this.posts = this.createModelObjForGuardian(url);
+    return this.posts;
   }
 
-  private getServiceURL(agent: string): string {
-    let baseUrl = this.urlResolverSvc.getBaseURL(agent);
-    let apiKey = this.urlResolverSvc.getAPIKey(agent);
-    console.log(baseUrl);
-    return baseUrl + apiKey;
+  private createModelObjForGuardian(url: string): Posts[] {
+    var postArr: Posts[] = [];
+    this.fetchDataFromURL(url).subscribe(
+      data => {
+        data.response.results.map(
+          postObjct => postArr.push(new Posts(postObjct))
+        )
+      }
+    );
+    return postArr;
   }
 
 }

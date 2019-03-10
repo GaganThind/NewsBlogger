@@ -23,19 +23,11 @@ export class UrlResolverService extends CommonServicesService{
       );
   }
 
-  public getBaseURL(key: string): string {
-    let baseUrl: string;
-    this.getValueFromJSON(this.WEB_URL_KEY_LOCATION, key).subscribe(
-      data => baseUrl = data
-    );
-    return baseUrl;
+  public getBaseURL(key: string): Observable<any> {
+    return this.getValueFromJSON(this.WEB_URL_KEY_LOCATION, key);
   }
 
-  public getAPIKey(key: string): string {
-    let apiKey: string;
-    this.getValueFromJSON(this.API_KEY_LOCATION, key).subscribe(
-      data => apiKey = data
-    );
-    return apiKey;
+  public getAPIKey(key: string): Observable<any> {
+    return this.getValueFromJSON(this.API_KEY_LOCATION, key);
   }
 }
