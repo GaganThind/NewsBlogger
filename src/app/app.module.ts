@@ -10,6 +10,7 @@ import { BloggingPageComponent } from './components/blogging-page/blogging-page.
 import { BlogPostComponent } from './components/blog-post/blog-post.component';
 import { TheGuardianService } from './services/posts/the-guardian.service';
 import { UrlResolverService } from './services/posts/url-resolver.service';
+import { NewYorkTimesService } from './services/posts/new-york-times.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { UrlResolverService } from './services/posts/url-resolver.service';
   ],
   providers: [
     TheGuardianService,
-    UrlResolverService
+    UrlResolverService,
+    NewYorkTimesService
   ],
   bootstrap: [AppComponent]
 })

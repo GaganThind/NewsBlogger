@@ -16,4 +16,8 @@ export class CommonServicesService {
     return this.httpClient.get(url);
   }
 
+  protected fetchNewsPosts(url: string): Observable<any> {
+    return this.fetchDataFromURL(url);
+  }
+
 }

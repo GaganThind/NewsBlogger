@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Posts } from '../../models/posts.model';
 import { TheGuardianService } from '../../services/posts/the-guardian.service';
 import { UrlResolverService } from '../../services/posts/url-resolver.service';
+import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
+import { NewsSouces } from '../../util/news-source';
 
 @Component({
   selector: 'app-blogging-page',
@@ -11,16 +13,21 @@ import { UrlResolverService } from '../../services/posts/url-resolver.service';
 export class BloggingPageComponent implements OnInit {
 
   private posts: Posts[] = [];
-  private baseURL: string;
-  constructor(private theGuardianService: TheGuardianService
-    , private urlResolverSvc: UrlResolverService) { }
+  private postsGrdn: Posts[] = [];
+  private postsNY: Posts[] = [];
+
+  constructor(private theGuardianSvc: TheGuardianService,
+    private urlResolverSvc: UrlResolverService,
+    private newYorkTimesSvc: NewYorkTimesService ) { }
 
   ngOnInit() {
-    const THE_GUARDIAN = 'THE_GUARDIAN';
-    this.getServiceURL(THE_GUARDIAN);
+    const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
+    const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
+    this.getNewsPosts(THE_GUARDIAN);
+    this.getNewsPosts(NEW_YORK_TIMES);
   }
 
-  private getServiceURL(agent: string) {
+  private getNewsPosts(agent: string) {
     this.urlResolverSvc.getBaseURL(agent).subscribe(
       url => {
         this.urlResolverSvc.getAPIKey(agent).subscribe(
@@ -33,6 +40,29 @@ export class BloggingPageComponent implements OnInit {
   }
 
   getPostsDataFromService(agent: string, url: string) {
-    this.posts = this.theGuardianService.fetchNewsPosts(url);
+    var postArr: Posts[] = [];
+    if(NewsSouces.THE_GUARDIAN === NewsSouces[agent]) {
+      this.theGuardianSvc.fetchNewsPosts(url).subscribe(
+        data => {
+          data.response.results.map(
+            postObjct => postArr.push(new Posts(postObjct))
+          )
+        }
+      );
+      this.postsGrdn = postArr;
+    } else if(NewsSouces.NEW_YORK_TIMES === NewsSouces[agent]) {
+      this.newYorkTimesSvc.fetchNewsPosts(url).subscribe(
+        data => data.results.map(
+          postObjct => {
+            postObjct.webTitle = postObjct.title;
+            postObjct.webUrl = postObjct.url;
+            postObjct.type = postObjct.item_type;
+            postObjct.webPublicationDate = postObjct.published_date;
+            postArr.push(new Posts(postObjct))
+          }
+        )
+      );
+      this.postsNY = postArr;
+    }
   }
 }
