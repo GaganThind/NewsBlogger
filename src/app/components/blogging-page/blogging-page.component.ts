@@ -17,9 +17,7 @@ export class BloggingPageComponent implements OnInit {
 
   ngOnInit() {
     const THE_GUARDIAN = 'THE_GUARDIAN';
-    let abc = this.getServiceURL(THE_GUARDIAN);
-    console.log(abc);
-    //this.getPostsDataFromService();
+    this.getServiceURL(THE_GUARDIAN);
   }
 
   private getServiceURL(agent: string) {
