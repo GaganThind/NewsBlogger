@@ -15,10 +15,22 @@ export class BaseService {
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * This method fetches the data from the provided URL.
+   * The URL can be localed on the web or locally.
+   * 
+   * @param url : This is the url from where to fetch the data
+   */
   protected fetchDataFromURL(url: string): Observable<any> {
     return this.httpClient.get(url);
   }
 
+  /**
+   * This method fetches the data from the provided URL.
+   * The URL can be localed on the web or locally.
+   * 
+   * @param url : This is the url from where to fetch the data
+   */
   protected fetchNewsPosts(url: string): Observable<any> {
     return this.fetchDataFromURL(url);
   }

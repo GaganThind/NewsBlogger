@@ -1,3 +1,6 @@
+/**
+ * This model class is used to create news posts from the provided inputs
+ */
 export class Posts {
     public webTitle: string;
     public webUrl: string;

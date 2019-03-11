@@ -5,6 +5,10 @@ import { UrlResolverService } from '../../services/common/url-resolver.service';
 import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
 import { NewsSouces } from '../../util/news-source';
 
+/**
+ * This class is the page component renderer which contains methods to fetch news posts
+ * and then pass it to the view layer
+ */
 @Component({
   selector: 'app-blogging-page',
   templateUrl: './blogging-page.component.html',
@@ -26,6 +30,7 @@ export class BloggingPageComponent implements OnInit {
     //this.getNewsPosts(NEW_YORK_TIMES);
   }
 
+  // Get the news posts
   private getNewsPosts(agent: string) {
     this.urlResolverSvc.getBaseURL(agent).subscribe(
       url => {
@@ -38,6 +43,7 @@ export class BloggingPageComponent implements OnInit {
     );
   }
 
+  //This method creates an array of Posts objects that are displayed on screen
   getPostsDataFromService(agent: string, url: string) {
     var postArr: Posts[] = [];
     if(NewsSouces.THE_GUARDIAN === NewsSouces[agent]) {

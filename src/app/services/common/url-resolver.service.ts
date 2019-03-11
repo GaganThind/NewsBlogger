@@ -4,6 +4,9 @@ import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+/**
+ * This class fetches the resources at the provided url
+ */
 @Injectable({
   providedIn: 'root'
 })
