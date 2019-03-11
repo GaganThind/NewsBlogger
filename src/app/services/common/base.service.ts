@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+/**
+ * This class is the base for all services classes with common methods.
+ */
 @Injectable({
   providedIn: 'root'
 })
