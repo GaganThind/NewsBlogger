@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Posts } from '../../models/posts.model';
 import { TheGuardianService } from '../../services/posts/the-guardian.service';
-import { UrlResolverService } from '../../services/posts/url-resolver.service';
+import { UrlResolverService } from '../../services/common/url-resolver.service';
 import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
 import { NewsSouces } from '../../util/news-source';
 
@@ -12,7 +12,6 @@ import { NewsSouces } from '../../util/news-source';
 })
 export class BloggingPageComponent implements OnInit {
 
-  private posts: Posts[] = [];
   private postsGrdn: Posts[] = [];
   private postsNY: Posts[] = [];
 
@@ -24,7 +23,7 @@ export class BloggingPageComponent implements OnInit {
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
     const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
     this.getNewsPosts(THE_GUARDIAN);
-    this.getNewsPosts(NEW_YORK_TIMES);
+    //this.getNewsPosts(NEW_YORK_TIMES);
   }
 
   private getNewsPosts(agent: string) {

@@ -9,7 +9,7 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { BloggingPageComponent } from './components/blogging-page/blogging-page.component';
 import { BlogPostComponent } from './components/blog-post/blog-post.component';
 import { TheGuardianService } from './services/posts/the-guardian.service';
-import { UrlResolverService } from './services/posts/url-resolver.service';
+import { UrlResolverService } from './services/common/url-resolver.service';
 import { NewYorkTimesService } from './services/posts/new-york-times.service';
 
 @NgModule({

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CommonServicesService {
+export class BaseService {
 
   private serviceArgURL: string;
   private serviceArgKey: string;

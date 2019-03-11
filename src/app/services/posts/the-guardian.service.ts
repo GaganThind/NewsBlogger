@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CommonServicesService } from './common-services.service';
+import { BaseService } from '../common/base.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TheGuardianService extends CommonServicesService{
+export class TheGuardianService extends BaseService{
 
   constructor(httpClient: HttpClient) { super(httpClient) }
 

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CommonServicesService } from './common-services.service';
+import { BaseService } from './base.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UrlResolverService extends CommonServicesService{
+export class UrlResolverService extends BaseService{
 
   private WEB_URL_KEY_LOCATION = './assets/web-posts-url.json';
   private API_KEY_LOCATION = './assets/api-keys.json';
