@@ -4,6 +4,7 @@ import { TheGuardianService } from '../../services/posts/the-guardian.service';
 import { UrlResolverService } from '../../services/common/url-resolver.service';
 import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
 import { NewsSouces } from '../../util/news-source';
+import { mergeMap, find } from 'rxjs/operators';
 
 /**
  * This class is the page component renderer which contains methods to fetch news posts
@@ -16,8 +17,7 @@ import { NewsSouces } from '../../util/news-source';
 })
 export class BloggingPageComponent implements OnInit {
 
-  private postsGrdn: Posts[] = [];
-  private postsNY: Posts[] = [];
+  private posts: Posts[] = [];
 
   constructor(private theGuardianSvc: TheGuardianService,
     private urlResolverSvc: UrlResolverService,
@@ -27,36 +27,29 @@ export class BloggingPageComponent implements OnInit {
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
     const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
     this.getNewsPosts(THE_GUARDIAN);
-    //this.getNewsPosts(NEW_YORK_TIMES);
+    this.getNewsPosts(NEW_YORK_TIMES);
   }
 
-  // Get the news posts
+  //This method gets the news posts and creates an array of Posts objects that are displayed on screen
   private getNewsPosts(agent: string) {
-    this.urlResolverSvc.getBaseURL(agent).subscribe(
-      url => {
-        this.urlResolverSvc.getAPIKey(agent).subscribe(
-          api => {
-            this.getPostsDataFromService(agent, url+api);
-          }
-        );
-      }
-    );
-  }
+    var postArr: Posts[] = this.posts;
+    const newsServiceurl = this.urlResolverSvc.getServiceURL(agent);
 
-  //This method creates an array of Posts objects that are displayed on screen
-  getPostsDataFromService(agent: string, url: string) {
-    var postArr: Posts[] = [];
     if(NewsSouces.THE_GUARDIAN === NewsSouces[agent]) {
-      this.theGuardianSvc.fetchNewsPosts(url).subscribe(
+      newsServiceurl.pipe(
+        mergeMap(url => this.theGuardianSvc.fetchNewsPosts(url))
+      ).subscribe(
         data => {
           data.response.results.map(
             postObjct => postArr.push(new Posts(postObjct))
           )
         }
       );
-      this.postsGrdn = postArr;
     } else if(NewsSouces.NEW_YORK_TIMES === NewsSouces[agent]) {
-      this.newYorkTimesSvc.fetchNewsPosts(url).subscribe(
+      newsServiceurl.pipe(
+        mergeMap(url => this.newYorkTimesSvc.fetchNewsPosts(url)
+        )
+      ).subscribe(
         data => data.results.map(
           postObjct => {
             postObjct.webTitle = postObjct.title;
@@ -67,7 +60,7 @@ export class BloggingPageComponent implements OnInit {
           }
         )
       );
-      this.postsNY = postArr;
     }
+    this.posts = postArr;
   }
 }
