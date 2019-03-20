@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BaseService } from './base.service';
+import BaseService from './base.service';
 
 describe('CommonServicesService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
