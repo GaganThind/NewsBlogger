@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Posts } from '../../models/posts.model';
 import { TheGuardianService } from '../../services/posts/the-guardian.service';
 import { UrlResolverService } from '../../services/common/url-resolver.service';
 import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
 import { NewsSouces } from '../../util/news-source';
-import { mergeMap, find } from 'rxjs/operators';
+import { mergeMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * This class is the page component renderer which contains methods to fetch news posts
@@ -15,9 +16,10 @@ import { mergeMap, find } from 'rxjs/operators';
   templateUrl: './blogging-page.component.html',
   styleUrls: ['./blogging-page.component.scss']
 })
-export class BloggingPageComponent implements OnInit {
-
+export class BloggingPageComponent implements OnInit, OnDestroy {
+  
   private posts: Posts[] = [];
+  private ngUnsubscribe = new Subject();
 
   constructor(private theGuardianSvc: TheGuardianService,
     private urlResolverSvc: UrlResolverService,
@@ -27,7 +29,12 @@ export class BloggingPageComponent implements OnInit {
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
     const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
     this.getNewsPosts(THE_GUARDIAN);
-    this.getNewsPosts(NEW_YORK_TIMES);
+    //this.getNewsPosts(NEW_YORK_TIMES);
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   //This method gets the news posts and creates an array of Posts objects that are displayed on screen
@@ -37,6 +44,8 @@ export class BloggingPageComponent implements OnInit {
 
     if(NewsSouces.THE_GUARDIAN === NewsSouces[agent]) {
       newsServiceurl.pipe(
+        takeUntil(this.ngUnsubscribe)
+      ).pipe(
         mergeMap(url => this.theGuardianSvc.fetchNewsPosts(url))
       ).subscribe(
         data => {
@@ -47,6 +56,8 @@ export class BloggingPageComponent implements OnInit {
       );
     } else if(NewsSouces.NEW_YORK_TIMES === NewsSouces[agent]) {
       newsServiceurl.pipe(
+        takeUntil(this.ngUnsubscribe)
+      ).pipe(
         mergeMap(url => this.newYorkTimesSvc.fetchNewsPosts(url)
         )
       ).subscribe(
