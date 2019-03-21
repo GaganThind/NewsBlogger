@@ -2,15 +2,15 @@
  * This model class is used to create news posts from the provided inputs
  */
 export class Posts {
-    public webTitle: string;
-    public webUrl: string;
-    public type: string;
+    public title: string;
+    public url: string;
+    public typeOfPostOrSource: string;
     public date: string
 
     constructor(elemnt: any) { 
-        this.webTitle = elemnt.webTitle;
-        this.webUrl = elemnt.webUrl;
-        this.type = elemnt.type;
-        this.date = new Date(elemnt.webPublicationDate).toUTCString();
+        this.title = elemnt.title;
+        this.url = elemnt.url;
+        this.typeOfPostOrSource = elemnt.typeOfPostOrSource;
+        this.date = new Date(elemnt.date).toUTCString();
     }
 }

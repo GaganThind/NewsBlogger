@@ -6,6 +6,7 @@ import { NewYorkTimesService } from '../../services/posts/new-york-times.service
 import { NewsSouces } from '../../util/news-source';
 import { mergeMap, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NewsApiService } from 'src/app/services/posts/news-api.service';
 
 /**
  * This class is the page component renderer which contains methods to fetch news posts
@@ -21,15 +22,20 @@ export class BloggingPageComponent implements OnInit, OnDestroy {
   private posts: Posts[] = [];
   private ngUnsubscribe = new Subject();
 
-  constructor(private theGuardianSvc: TheGuardianService,
+  constructor( 
     private urlResolverSvc: UrlResolverService,
-    private newYorkTimesSvc: NewYorkTimesService ) { }
+    private theGuardianSvc: TheGuardianService,
+    private newYorkTimesSvc: NewYorkTimesService,
+    private newsAPISvc: NewsApiService 
+  ) { }
 
   ngOnInit() {
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
     const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
+    const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
     this.getNewsPosts(THE_GUARDIAN);
     //this.getNewsPosts(NEW_YORK_TIMES);
+    //this.getNewsPosts(NEWS_API);
   }
 
   ngOnDestroy(): void {
@@ -40,33 +46,54 @@ export class BloggingPageComponent implements OnInit, OnDestroy {
   //This method gets the news posts and creates an array of Posts objects that are displayed on screen
   private getNewsPosts(agent: string) {
     var postArr: Posts[] = this.posts;
-    const newsServiceurl = this.urlResolverSvc.getServiceURL(agent);
+    const newsServiceurl = this.urlResolverSvc
+                                  .getServiceURL(agent)
+                                  .pipe(
+                                    takeUntil(this.ngUnsubscribe)
+                                  );
 
     if(NewsSouces.THE_GUARDIAN === NewsSouces[agent]) {
       newsServiceurl.pipe(
-        takeUntil(this.ngUnsubscribe)
-      ).pipe(
         mergeMap(url => this.theGuardianSvc.fetchNewsPosts(url))
       ).subscribe(
         data => {
           data.response.results.map(
-            postObjct => postArr.push(new Posts(postObjct))
+            postObjct => {
+              postObjct.title = postObjct.webTitle;
+              postObjct.url = postObjct.webUrl;
+              postObjct.typeOfPostOrSource = postObjct.type;
+              postObjct.date = postObjct.webPublicationDate;
+              postArr.push(new Posts(postObjct))
+            }
           )
         }
       );
     } else if(NewsSouces.NEW_YORK_TIMES === NewsSouces[agent]) {
       newsServiceurl.pipe(
-        takeUntil(this.ngUnsubscribe)
-      ).pipe(
         mergeMap(url => this.newYorkTimesSvc.fetchNewsPosts(url)
         )
       ).subscribe(
         data => data.results.map(
           postObjct => {
-            postObjct.webTitle = postObjct.title;
-            postObjct.webUrl = postObjct.url;
-            postObjct.type = postObjct.item_type;
-            postObjct.webPublicationDate = postObjct.published_date;
+            postObjct.title = postObjct.title;
+            postObjct.url = postObjct.url;
+            postObjct.typeOfPostOrSource = postObjct.item_type;
+            postObjct.date = postObjct.published_date;
+            postArr.push(new Posts(postObjct))
+          }
+        )
+      );
+    } else if(NewsSouces.NEWS_API === NewsSouces[agent]) {
+      newsServiceurl.pipe(
+        mergeMap(url => this.newsAPISvc.fetchNewsPosts(url)
+        )
+      ).subscribe(
+        data => data.articles.map(
+          postObjct => {
+            postObjct.title = postObjct.title;
+            postObjct.url = postObjct.url;
+            postObjct.typeOfPostOrSource = postObjct.source.name;
+            postObjct.date = postObjct.publishedAt;
             postArr.push(new Posts(postObjct))
           }
         )
