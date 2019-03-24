@@ -20,7 +20,7 @@ export class BloggingPageComponent implements OnInit, OnDestroy {
   private posts: Posts[] = [];
   private ngUnsubscribe = new Subject();
 
-  //Scroll variables
+  //Scroll variables DO NOT remove
   private throttle = 300;
   private scrollDistance = 1;
   private scrollUpDistance = 2;

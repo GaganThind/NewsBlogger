@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import BaseService from './base.service';
 import { Observable } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
+import { URL_MAP } from 'src/app/util/global-variables';
 
 /**
  * This class fetches the resources at the provided url
@@ -24,7 +25,7 @@ export class UrlResolverService extends BaseService {
    * @param key : This is the key whose value is to be returned
    */
   private getValueFromJSON(jsonLocation: string, key: string): Observable<any> {
-    return this.fetchDataFromURL(jsonLocation).pipe(
+    return super.fetchDataFromURL(jsonLocation).pipe(
       map(
         data => data.find(obj => obj.id === key).value
       )
@@ -54,7 +55,7 @@ export class UrlResolverService extends BaseService {
    * 
    * @param agent : This parameter tell which news source url to hit
    */
-  public getServiceURL(agent: string): Observable<any> {
+  private getServiceURL(agent: string): Observable<any> {
     const obsrvblBaseURL = this.getBaseURL(agent);
     const obsrvblAPIKey = this.getAPIKey(agent);
 
@@ -68,4 +69,22 @@ export class UrlResolverService extends BaseService {
       )
     )
   }
+
+  /**
+   * Load the serviceURLs during app initialization
+   * 
+   * @param agent : This parameter tell which news source url to hit
+   */
+  getInitServiceURL(agent: string): Promise<Map<string, string>> {
+    const promise = this.getServiceURL(agent)
+    .toPromise()
+    .then(
+      url => {
+        URL_MAP.set(agent, url);
+        return URL_MAP;
+      }
+    );
+    return promise;
+  }
+
 }

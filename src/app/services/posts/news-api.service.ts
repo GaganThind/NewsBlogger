@@ -2,23 +2,19 @@ import { Injectable } from '@angular/core';
 import BaseService from '../common/base.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { UrlResolverService } from '../common/url-resolver.service';
-import { NewsSouces } from 'src/app/util/news-source';
+import { NewsSouces } from 'src/app/util/global-variables';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsApiService extends BaseService {
 
-  constructor(httpClient: HttpClient, private urlResolverSvc: UrlResolverService) { super(httpClient) }
+  private serviceUrl: string;
 
-  /**
-   * Get the NEWS api url from json
-   */
-  private newsApiSvcUrl(): Observable<any> {
+  constructor(httpClient: HttpClient) {
+    super(httpClient);
     const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
-    return this.urlResolverSvc.getServiceURL(NEWS_API);
+    this.serviceUrl = super.getServiceURLFromInitMap(NEWS_API);
   }
 
   /**
@@ -28,14 +24,7 @@ export class NewsApiService extends BaseService {
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPosts(): Observable<any> {
-    return this.newsApiSvcUrl()
-      .pipe(
-        mergeMap(
-          url => {
-            return super.fetchNewsPosts(url);
-          }
-        )
-      );
+    return super.fetchNewsPosts(this.serviceUrl);
   }
 
   /**
@@ -45,15 +34,7 @@ export class NewsApiService extends BaseService {
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPostsWithPage(page: number): Observable<any> {
-    return this.newsApiSvcUrl()
-      .pipe(
-        mergeMap(
-          url => {
-            url += '&page=' + page;
-            return super.fetchNewsPosts(url);
-          }
-        )
-      );
+    return super.fetchNewsPosts(this.serviceUrl + '&page=' + page);
   }
 
 }

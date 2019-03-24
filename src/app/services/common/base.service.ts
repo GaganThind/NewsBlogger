@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { URL_MAP } from 'src/app/util/global-variables';
 
 /**
  * This class is the base for all services classes with common methods.
@@ -30,6 +31,15 @@ export default abstract class BaseService {
    */
   protected fetchNewsPosts(url: string): Observable<any> {
     return this.fetchDataFromURL(url);
+  }
+
+  /**
+   * Get the URL from the map created durinf initialization
+   * 
+   * @param agent : This tells the website to hit
+   */
+  protected getServiceURLFromInitMap(agent: string) {
+    return URL_MAP.get(agent);
   }
 
 }

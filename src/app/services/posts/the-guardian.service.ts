@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import BaseService from '../common/base.service';
 import { Observable } from 'rxjs';
-import { UrlResolverService } from '../common/url-resolver.service';
-import { mergeMap } from 'rxjs/operators';
-import { NewsSouces } from 'src/app/util/news-source';
+import { NewsSouces } from 'src/app/util/global-variables';
 
 /**
  * This service class is used for The Guardian News service
@@ -14,14 +12,12 @@ import { NewsSouces } from 'src/app/util/news-source';
 })
 export class TheGuardianService extends BaseService {
 
-  constructor(httpClient: HttpClient, private urlResolverSvc: UrlResolverService) { super(httpClient) }
+  private serviceUrl: string;
 
-  /**
-   * Get the Guardian url from json
-   */
-  private guardianSvcUrl(): Observable<any> {
+  constructor(httpClient: HttpClient) {
+    super(httpClient);
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
-    return this.urlResolverSvc.getServiceURL(THE_GUARDIAN);
+    this.serviceUrl = super.getServiceURLFromInitMap(THE_GUARDIAN);
   }
 
   /**
@@ -31,14 +27,7 @@ export class TheGuardianService extends BaseService {
   * @param url : Specify the url to fetch the data
   */
   fetchNewsPosts(): Observable<any> {
-    return this.guardianSvcUrl()
-      .pipe(
-        mergeMap(
-          url => {
-            return super.fetchNewsPosts(url);
-          }
-        )
-      );
+    return super.fetchNewsPosts(this.serviceUrl);
   }
 
   /**
@@ -48,15 +37,7 @@ export class TheGuardianService extends BaseService {
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPostsWithPage(page: number): Observable<any> {
-    return this.guardianSvcUrl()
-      .pipe(
-        mergeMap(
-          url => {
-            url += '&page=' + page;
-            return super.fetchNewsPosts(url);
-          }
-        )
-      );
+    return super.fetchNewsPosts(this.serviceUrl + '&page=' + page);
   }
 
 }
