@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
@@ -11,6 +11,7 @@ import { BlogPostComponent } from './components/blog-post/blog-post.component';
 import { TheGuardianService } from './services/posts/the-guardian.service';
 import { UrlResolverService } from './services/common/url-resolver.service';
 import { NewYorkTimesService } from './services/posts/new-york-times.service';
+import { CustomErrorHandlerService } from './services/common/custom-error-handler.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,11 @@ import { NewYorkTimesService } from './services/posts/new-york-times.service';
   providers: [
     TheGuardianService,
     UrlResolverService,
-    NewYorkTimesService
+    NewYorkTimesService,
+    { 
+      provide: ErrorHandler, 
+      useClass: CustomErrorHandlerService 
+    }
   ],
   bootstrap: [AppComponent]
 })
