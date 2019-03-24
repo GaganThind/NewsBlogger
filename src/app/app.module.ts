@@ -12,6 +12,7 @@ import { TheGuardianService } from './services/posts/the-guardian.service';
 import { UrlResolverService } from './services/common/url-resolver.service';
 import { NewYorkTimesService } from './services/posts/new-york-times.service';
 import { CustomErrorHandlerService } from './services/common/custom-error-handler.service';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -24,15 +25,16 @@ import { CustomErrorHandlerService } from './services/common/custom-error-handle
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    InfiniteScrollModule
   ],
   providers: [
     TheGuardianService,
     UrlResolverService,
     NewYorkTimesService,
-    { 
-      provide: ErrorHandler, 
-      useClass: CustomErrorHandlerService 
+    {
+      provide: ErrorHandler,
+      useClass: CustomErrorHandlerService
     }
   ],
   bootstrap: [AppComponent]

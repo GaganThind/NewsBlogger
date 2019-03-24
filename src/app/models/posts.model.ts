@@ -7,7 +7,7 @@ export class Posts {
     public typeOfPostOrSource: string;
     public date: string
 
-    constructor(elemnt: any) { 
+    constructor(elemnt: any) {
         this.title = elemnt.title;
         this.url = elemnt.url;
         this.typeOfPostOrSource = elemnt.typeOfPostOrSource;

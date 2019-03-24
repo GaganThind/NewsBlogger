@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Posts } from '../../models/posts.model';
 import { TheGuardianService } from '../../services/posts/the-guardian.service';
-import { UrlResolverService } from '../../services/common/url-resolver.service';
 import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
-import { NewsSouces } from '../../util/news-source';
-import { mergeMap, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NewsApiService } from 'src/app/services/posts/news-api.service';
 
@@ -18,24 +16,29 @@ import { NewsApiService } from 'src/app/services/posts/news-api.service';
   styleUrls: ['./blogging-page.component.scss']
 })
 export class BloggingPageComponent implements OnInit, OnDestroy {
-  
+
   private posts: Posts[] = [];
   private ngUnsubscribe = new Subject();
 
-  constructor( 
-    private urlResolverSvc: UrlResolverService,
+  //Scroll variables
+  private throttle = 300;
+  private scrollDistance = 1;
+  private scrollUpDistance = 2;
+  private page: number = 1;
+
+  //News Sources
+  FETCH_FRM_THE_GUARDIAN: boolean = true;
+  FETCH_FRM_NEW_YORK_TIMES: boolean = false;
+  FETCH_FRM_NEWS_API: boolean = false;
+
+  constructor(
     private theGuardianSvc: TheGuardianService,
     private newYorkTimesSvc: NewYorkTimesService,
-    private newsAPISvc: NewsApiService 
+    private newsAPISvc: NewsApiService
   ) { }
 
   ngOnInit() {
-    const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
-    const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
-    const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
-    this.getNewsPosts(THE_GUARDIAN);
-    //this.getNewsPosts(NEW_YORK_TIMES);
-    //this.getNewsPosts(NEWS_API);
+    this.getNewsPosts();
   }
 
   ngOnDestroy(): void {
@@ -43,62 +46,68 @@ export class BloggingPageComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  //This method gets the news posts and creates an array of Posts objects that are displayed on screen
-  private getNewsPosts(agent: string) {
-    var postArr: Posts[] = this.posts;
-    const newsServiceurl = this.urlResolverSvc
-                                  .getServiceURL(agent)
-                                  .pipe(
-                                    takeUntil(this.ngUnsubscribe)
-                                  );
+  onInfiniteDownScroll() {
+    this.page += 1;
+    this.getNewsPosts();
+  }
 
-    if(NewsSouces.THE_GUARDIAN === NewsSouces[agent]) {
-      newsServiceurl.pipe(
-        mergeMap(url => this.theGuardianSvc.fetchNewsPosts(url))
-      ).subscribe(
-        data => {
-          data.response.results.map(
+  //This method gets the news posts and creates an array of Posts objects that are displayed on screen
+  private getNewsPosts() {
+    var postArr: Posts[] = this.posts;
+
+    if (this.FETCH_FRM_THE_GUARDIAN) {
+      this.theGuardianSvc.fetchNewsPostsWithPage(this.page)
+        .pipe(
+          takeUntil(this.ngUnsubscribe)
+        ).subscribe(
+          data => {
+            data.response.results.map(
+              postObjct => {
+                postObjct.title = postObjct.webTitle;
+                postObjct.url = postObjct.webUrl;
+                postObjct.typeOfPostOrSource = postObjct.type;
+                postObjct.date = postObjct.webPublicationDate;
+                postArr.push(new Posts(postObjct))
+              }
+            )
+          }
+        );
+    }
+
+    if (this.FETCH_FRM_NEW_YORK_TIMES) {
+      this.newYorkTimesSvc.fetchNewsPostsWithPage(this.page)
+        .pipe(
+          takeUntil(this.ngUnsubscribe)
+        ).subscribe(
+          data => data.results.map(
             postObjct => {
-              postObjct.title = postObjct.webTitle;
-              postObjct.url = postObjct.webUrl;
-              postObjct.typeOfPostOrSource = postObjct.type;
-              postObjct.date = postObjct.webPublicationDate;
+              postObjct.title = postObjct.title;
+              postObjct.url = postObjct.url;
+              postObjct.typeOfPostOrSource = postObjct.item_type;
+              postObjct.date = postObjct.published_date;
               postArr.push(new Posts(postObjct))
             }
           )
-        }
-      );
-    } else if(NewsSouces.NEW_YORK_TIMES === NewsSouces[agent]) {
-      newsServiceurl.pipe(
-        mergeMap(url => this.newYorkTimesSvc.fetchNewsPosts(url)
-        )
-      ).subscribe(
-        data => data.results.map(
-          postObjct => {
-            postObjct.title = postObjct.title;
-            postObjct.url = postObjct.url;
-            postObjct.typeOfPostOrSource = postObjct.item_type;
-            postObjct.date = postObjct.published_date;
-            postArr.push(new Posts(postObjct))
-          }
-        )
-      );
-    } else if(NewsSouces.NEWS_API === NewsSouces[agent]) {
-      newsServiceurl.pipe(
-        mergeMap(url => this.newsAPISvc.fetchNewsPosts(url)
-        )
-      ).subscribe(
-        data => data.articles.map(
-          postObjct => {
-            postObjct.title = postObjct.title;
-            postObjct.url = postObjct.url;
-            postObjct.typeOfPostOrSource = postObjct.source.name;
-            postObjct.date = postObjct.publishedAt;
-            postArr.push(new Posts(postObjct))
-          }
-        )
-      );
+        );
     }
+
+    if (this.FETCH_FRM_NEWS_API) {
+      this.newsAPISvc.fetchNewsPostsWithPage(this.page)
+        .pipe(
+          takeUntil(this.ngUnsubscribe)
+        ).subscribe(
+          data => data.articles.map(
+            postObjct => {
+              postObjct.title = postObjct.title;
+              postObjct.url = postObjct.url;
+              postObjct.typeOfPostOrSource = postObjct.source.name;
+              postObjct.date = postObjct.publishedAt;
+              postArr.push(new Posts(postObjct))
+            }
+          )
+        );
+    }
+
     this.posts = postArr;
   }
 }

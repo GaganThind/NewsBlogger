@@ -1,7 +1,7 @@
 [
     {
         "id":"THE_GUARDIAN",
-        "value":"https://content.guardianapis.com/search?api-key="
+        "value":"https://content.guardianapis.com/search?page-size=10&api-key="
     },
     {
         "id":"NEW_YORK_TIMES",
@@ -9,6 +9,6 @@
     },
     {
         "id":"NEWS_API",
-        "value":"https://newsapi.org/v2/top-headlines?country=us&apiKey="
+        "value":"https://newsapi.org/v2/top-headlines?pageSize=10&country=in&apiKey="
     }
 ]

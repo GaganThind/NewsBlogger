@@ -8,10 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export default class BaseService {
-
-  private serviceArgURL: string;
-  private serviceArgKey: string;
+export default abstract class BaseService {
 
   constructor(private httpClient: HttpClient) { }
 

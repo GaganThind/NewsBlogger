@@ -10,7 +10,7 @@ import { mergeMap, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class UrlResolverService extends BaseService{
+export class UrlResolverService extends BaseService {
 
   private WEB_URL_KEY_LOCATION = './assets/web-posts-url.json';
   private API_KEY_LOCATION = './assets/api-keys.json';
@@ -26,7 +26,7 @@ export class UrlResolverService extends BaseService{
   private getValueFromJSON(jsonLocation: string, key: string): Observable<any> {
     return this.fetchDataFromURL(jsonLocation).pipe(
       map(
-         data => data.find(obj => obj.id === key).value
+        data => data.find(obj => obj.id === key).value
       )
     );
   }

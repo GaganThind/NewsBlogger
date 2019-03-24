@@ -1,1 +1,8 @@
+<div class="search-results"
+      infinite-scroll
+      [infiniteScrollDistance]="scrollDistance"
+      [infiniteScrollUpDistance]="scrollUpDistance"
+      [infiniteScrollThrottle]="throttle"
+      (scrolled)="onInfiniteDownScroll()">
 <blog-post *ngFor="let postObj of posts" [post]="postObj"></blog-post>
+</div>
