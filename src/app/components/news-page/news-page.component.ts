@@ -11,11 +11,11 @@ import { NewsApiService } from 'src/app/services/posts/news-api.service';
  * and then pass it to the view layer
  */
 @Component({
-  selector: 'app-blogging-page',
-  templateUrl: './blogging-page.component.html',
-  styleUrls: ['./blogging-page.component.scss']
+  selector: 'app-news-page',
+  templateUrl: './news-page.component.html',
+  styleUrls: ['./news-page.component.scss']
 })
-export class BloggingPageComponent implements OnInit, OnDestroy {
+export class NewsPageComponent implements OnInit, OnDestroy {
 
   private posts: Posts[] = [];
   private ngUnsubscribe = new Subject();
@@ -28,8 +28,8 @@ export class BloggingPageComponent implements OnInit, OnDestroy {
 
   //News Sources
   FETCH_FRM_THE_GUARDIAN: boolean = true;
-  FETCH_FRM_NEW_YORK_TIMES: boolean = false;
-  FETCH_FRM_NEWS_API: boolean = false;
+  FETCH_FRM_NEW_YORK_TIMES: boolean = true;
+  FETCH_FRM_NEWS_API: boolean = true;
 
   constructor(
     private theGuardianSvc: TheGuardianService,

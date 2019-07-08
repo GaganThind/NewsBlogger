@@ -5,11 +5,11 @@ import { Posts } from '../../models/posts.model';
  * This class is used to dspaly the individual posts
  */
 @Component({
-  selector: 'blog-post',
-  templateUrl: './blog-post.component.html',
-  styleUrls: ['./blog-post.component.scss']
+  selector: 'news-post',
+  templateUrl: './news-post.component.html',
+  styleUrls: ['./news-post.component.scss']
 })
-export class BlogPostComponent implements OnInit {
+export class NewsPostComponent implements OnInit {
 
   @Input() post: Posts
   constructor() { }
