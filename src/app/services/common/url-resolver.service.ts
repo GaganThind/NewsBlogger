@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import BaseService from './base.service';
 import { Observable } from 'rxjs';
-import { mergeMap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { URL_MAP } from 'src/app/util/global-variables';
 
 /**
@@ -33,41 +33,21 @@ export class UrlResolverService extends BaseService {
   }
 
   /**
-   * Retrieve the news source url
-   * 
-   * @param key : This parameter tell which news source url to get
+   * Retrieve all the Urls and APIs
    */
-  private getBaseURL(key: string): Observable<any> {
-    return this.getValueFromJSON(this.WEB_URL_KEY_LOCATION, key);
-  }
+  public async getUrlWithAPIKeys() {
+    const urlValues: Object[] = await super.fetchDataFromURL(this.WEB_URL_KEY_LOCATION).toPromise();
+    const apiKeyValues: Object[] = await super.fetchDataFromURL(this.API_KEY_LOCATION).toPromise();
+    let urlWithApiKey: string;
 
-  /**
-   * Retrieve the api key from the api-keys.json
-   * 
-   * @param key : This parameter tell which news source api key to get
-   */
-  private getAPIKey(key: string): Observable<any> {
-    return this.getValueFromJSON(this.API_KEY_LOCATION, key);
-  }
-
-  /**
-   * This method return an Observable for the specified news agent
-   * 
-   * @param agent : This parameter tell which news source url to hit
-   */
-  private getServiceURL(agent: string): Observable<any> {
-    const obsrvblBaseURL = this.getBaseURL(agent);
-    const obsrvblAPIKey = this.getAPIKey(agent);
-
-    return obsrvblBaseURL.pipe(
-      mergeMap(
-        url => {
-          return obsrvblAPIKey.pipe(
-            map(api => url + api)
-          );
+    urlValues.forEach((url, index) => {
+      apiKeyValues.forEach((apiKey, index) => {
+        if(url["id"] == apiKey["id"]) {
+          urlWithApiKey = url["value"] + apiKey["value"];
+          URL_MAP.set(url["id"], urlWithApiKey);
         }
-      )
-    )
+      });
+    });
   }
 
   /**
@@ -75,16 +55,8 @@ export class UrlResolverService extends BaseService {
    * 
    * @param agent : This parameter tell which news source url to hit
    */
-  getInitServiceURL(agent: string): Promise<Map<string, string>> {
-    const promise = this.getServiceURL(agent)
-    .toPromise()
-    .then(
-      url => {
-        URL_MAP.set(agent, url);
-        return URL_MAP;
-      }
-    );
-    return promise;
+  getInitServiceURL(agent: string): Promise<any> {
+    return this.getUrlWithAPIKeys();
   }
 
 }
