@@ -35,28 +35,37 @@ export class UrlResolverService extends BaseService {
   /**
    * Retrieve all the Urls and APIs
    */
-  public async getUrlWithAPIKeys() {
+  public async getInitServiceURL(): Promise<any> {
     const urlValues: Object[] = await super.fetchDataFromURL(this.WEB_URL_KEY_LOCATION).toPromise();
     const apiKeyValues: Object[] = await super.fetchDataFromURL(this.API_KEY_LOCATION).toPromise();
+
+    let apiKeyMap = new Map<string, string>();
     let urlWithApiKey: string;
+    let apiKey: string;
+    let countOfUrls: number = 0;
+    let countOfUrlsWithKeys: number = 0;
+    
 
-    urlValues.forEach((url, index) => {
-      apiKeyValues.forEach((apiKey, index) => {
-        if(url["id"] == apiKey["id"]) {
-          urlWithApiKey = url["value"] + apiKey["value"];
-          URL_MAP.set(url["id"], urlWithApiKey);
-        }
-      });
+    apiKeyValues.forEach((apiKey, index) => {
+      apiKeyMap.set(apiKey["id"], apiKey["value"]);
     });
-  }
 
-  /**
-   * Load the serviceURLs during app initialization
-   * 
-   * @param agent : This parameter tell which news source url to hit
-   */
-  getInitServiceURL(agent: string): Promise<any> {
-    return this.getUrlWithAPIKeys();
+    //Add apiKeys to there respective URLs and save those in a global map
+    //If an apiKey is not found then throw an error and if no api keys exists then reject the promise
+    urlValues.forEach((url, index) => {
+      apiKey = apiKeyMap.get(url["id"]);
+      countOfUrls++;
+      if(typeof apiKey == "string" && apiKey.trim().length) {
+        urlWithApiKey = url["value"] + apiKey;
+        URL_MAP.set(url["id"], urlWithApiKey);
+        countOfUrlsWithKeys++;
+      } 
+    });
+
+    if(countOfUrlsWithKeys === 0 || countOfUrls === 0) {
+      return Promise.reject("No News source defined. Contact Admin");
+    } 
+    return Promise.resolve();
   }
 
 }
