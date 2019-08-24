@@ -25,7 +25,6 @@ export class NewYorkTimesService extends AbstractNewsService implements NewsServ
   static get Instance() {
     if(null === this.instance || undefined === this.instance) {
       this.instance = new NewYorkTimesService();
-      console.log("New York Service");
     }
     return this.instance;
   }

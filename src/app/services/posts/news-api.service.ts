@@ -22,7 +22,6 @@ export class NewsApiService extends AbstractNewsService implements NewsService {
   static get Instance() {
     if(null === this.instance || undefined === this.instance) {
       this.instance = new NewsApiService();
-      console.log("News API Service");
     }
     return this.instance;
   }

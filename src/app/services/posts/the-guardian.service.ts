@@ -25,7 +25,6 @@ export class TheGuardianService extends AbstractNewsService implements NewsServi
   static get Instance() {
     if(null === this.instance || undefined === this.instance) {
       this.instance = new TheGuardianService();
-      console.log("Guardian Service");
     }
     return this.instance;
   }

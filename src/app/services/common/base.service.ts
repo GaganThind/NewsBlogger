@@ -23,7 +23,6 @@ export class BaseService {
     if(null === this.instance || undefined === this.instance) {
       const httpClient =  InjectorInstance.get<HttpClient>(HttpClient);
       this.instance = new BaseService(httpClient);
-      console.log("called base service");
     }
     return this.instance;
   }
