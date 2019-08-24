@@ -1,47 +1,54 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { URL_MAP } from 'src/app/util/global-variables';
+import { map } from 'rxjs/operators';
+import { InjectorInstance } from 'src/app/modules/injector.module';
 
 /**
- * This class is the base for all services classes with common methods.
+ * This class has common methods to fetch data.
  */
 @Injectable({
   providedIn: 'root'
 })
-export default abstract class BaseService {
+export class BaseService {
 
-  constructor(private httpClient: HttpClient) { }
+  private static instance: BaseService = null;
+
+  private constructor(private httpClient: HttpClient) { }
 
   /**
-   * This method fetches the data from the provided URL.
-   * The URL can be localed on the web or locally.
-   * 
-   * @param url : This is the url from where to fetch the data
+   * Singelton instance for the service
    */
-  protected fetchDataFromURL(url: string): Observable<any> {
+  static get Instance() {
+    if(null === this.instance || undefined === this.instance) {
+      const httpClient =  InjectorInstance.get<HttpClient>(HttpClient);
+      this.instance = new BaseService(httpClient);
+      console.log("called base service");
+    }
+    return this.instance;
+  }
+
+  /**
+   * Fetch data from provided url
+   * 
+   * @param url 
+   */
+  public fetchDataFromURL(url: string): Observable<any> {
     return this.httpClient.get(url);
   }
 
   /**
-   * This method fetches the data from the provided URL.
-   * The URL can be localed on the web or locally.
+   * Retrieve the value from desired file by sending the key
    * 
-   * @param url : This is the url from where to fetch the data
+   * @param jsonLocation : This parameter is the local json/other file location to retrieve data from
+   * @param key : This is the key whose value is to be returned
    */
-  protected fetchNewsPosts(url: string): Observable<any> {
-    return (url.trim().indexOf("http://") != -1 || url.trim().indexOf("https://") != -1) ? 
-            this.fetchDataFromURL(url) : Observable.throw("Incorrect source URL format");
-  }
-
-  /**
-   * Get the URL from the map created during initialization
-   * 
-   * @param agent : This tells the website to hit
-   */
-  protected getServiceURLFromInitMap(agent: string): string {
-    const url = URL_MAP.get(agent);
-    return typeof url == "string" && url.trim().length ? url : "";
+  public getValueFromJSON(jsonLocation: string, key: string): Observable<any> {
+    return this.fetchDataFromURL(jsonLocation).pipe(
+      map(
+        data => data.find(obj => obj.id === key).value
+      )
+    );
   }
 
 }

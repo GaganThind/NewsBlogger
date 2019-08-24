@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import BaseService from './base.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { URL_MAP } from 'src/app/util/global-variables';
+import { BaseService } from './base.service';
 
 /**
  * This class fetches the resources at the provided url
@@ -11,33 +8,21 @@ import { URL_MAP } from 'src/app/util/global-variables';
 @Injectable({
   providedIn: 'root'
 })
-export class UrlResolverService extends BaseService {
+export class UrlResolverService {
 
   private WEB_URL_KEY_LOCATION = './assets/web-posts-url.json';
   private API_KEY_LOCATION = './assets/api-keys.json';
 
-  constructor(httpClient: HttpClient) { super(httpClient) }
-
-  /**
-   * Retrieve the value from desired file by sending the key
-   * 
-   * @param jsonLocation : This parameter is the local json/other file location to retrieve data from
-   * @param key : This is the key whose value is to be returned
-   */
-  private getValueFromJSON(jsonLocation: string, key: string): Observable<any> {
-    return super.fetchDataFromURL(jsonLocation).pipe(
-      map(
-        data => data.find(obj => obj.id === key).value
-      )
-    );
-  }
+  constructor() { }
 
   /**
    * Retrieve all the Urls and APIs
    */
   public async getInitServiceURL(): Promise<any> {
-    const urlValues: Object[] = await super.fetchDataFromURL(this.WEB_URL_KEY_LOCATION).toPromise();
-    const apiKeyValues: Object[] = await super.fetchDataFromURL(this.API_KEY_LOCATION).toPromise();
+    const urlValues: Object[] = await BaseService.Instance.
+                    fetchDataFromURL(this.WEB_URL_KEY_LOCATION).toPromise();
+    const apiKeyValues: Object[] = await BaseService.Instance.
+                    fetchDataFromURL(this.API_KEY_LOCATION).toPromise();
 
     let apiKeyMap = new Map<string, string>();
     let urlWithApiKey: string;
@@ -62,7 +47,7 @@ export class UrlResolverService extends BaseService {
       } 
     });
 
-    if(countOfUrlsWithKeys === 0 || countOfUrls === 0) {
+    if(0 === countOfUrlsWithKeys || 0 === countOfUrls) {
       return Promise.reject("No News source defined. Contact Admin");
     } 
     return Promise.resolve();

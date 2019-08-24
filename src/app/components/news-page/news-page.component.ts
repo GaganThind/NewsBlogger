@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Posts } from '../../models/posts.model';
-import { TheGuardianService } from '../../services/posts/the-guardian.service';
-import { NewYorkTimesService } from '../../services/posts/new-york-times.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NewsApiService } from 'src/app/services/posts/news-api.service';
+import { NewsFactoryService } from 'src/app/services/posts/news-factory.service';
+import { NewsSouces } from 'src/app/util/global-variables';
 
 /**
  * This class is the page component renderer which contains methods to fetch news posts
@@ -31,11 +30,9 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   FETCH_FRM_NEW_YORK_TIMES: boolean = true;
   FETCH_FRM_NEWS_API: boolean = true;
 
-  constructor(
-    private theGuardianSvc: TheGuardianService,
-    private newYorkTimesSvc: NewYorkTimesService,
-    private newsAPISvc: NewsApiService
-  ) { }
+  private newsFactory = new NewsFactoryService();
+
+  constructor() { }
 
   ngOnInit() {
     this.getNewsPosts();
@@ -54,9 +51,10 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   //This method gets the news posts and creates an array of Posts objects that are displayed on screen
   private getNewsPosts() {
     var postArr: Posts[] = this.posts;
-
+    
     if (this.FETCH_FRM_THE_GUARDIAN) {
-      this.theGuardianSvc.fetchNewsPostsWithPage(this.page)
+      const guardianNewsSvc = this.newsFactory.getService(NewsSouces[NewsSouces.THE_GUARDIAN]);
+      guardianNewsSvc.fetchNewsPostsWithPage(this.page)
         .pipe(
           takeUntil(this.ngUnsubscribe)
         ).subscribe(
@@ -75,7 +73,8 @@ export class NewsPageComponent implements OnInit, OnDestroy {
     }
 
     if (this.FETCH_FRM_NEW_YORK_TIMES) {
-      this.newYorkTimesSvc.fetchNewsPostsWithPage(this.page)
+      const newYorkTimesNewsSvc = this.newsFactory.getService(NewsSouces[NewsSouces.NEW_YORK_TIMES]);
+      newYorkTimesNewsSvc.fetchNewsPostsWithPage(this.page)
         .pipe(
           takeUntil(this.ngUnsubscribe)
         ).subscribe(
@@ -92,7 +91,8 @@ export class NewsPageComponent implements OnInit, OnDestroy {
     }
 
     if (this.FETCH_FRM_NEWS_API) {
-      this.newsAPISvc.fetchNewsPostsWithPage(this.page)
+      const newsAPINewsSvc = this.newsFactory.getService(NewsSouces[NewsSouces.NEWS_API]);
+      newsAPINewsSvc.fetchNewsPostsWithPage(this.page)
         .pipe(
           takeUntil(this.ngUnsubscribe)
         ).subscribe(
