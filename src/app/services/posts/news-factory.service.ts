@@ -22,13 +22,12 @@ export class NewsFactoryService {
    * @param newsSource 
    */
   getService(newsSource: string): NewsService {
-    if(newsSource == NewsSouces[NewsSouces.THE_GUARDIAN]) {
-      return TheGuardianService.Instance;
-    } else if(newsSource == NewsSouces[NewsSouces.NEW_YORK_TIMES]) {
-      return NewYorkTimesService.Instance;
-    } else if(newsSource == NewsSouces[NewsSouces.NEWS_API]) {
-      return NewsApiService.Instance;
-    }  
-    return null;
+    switch(newsSource) {
+      case NewsSouces[NewsSouces.THE_GUARDIAN]: return TheGuardianService.Instance;
+      case NewsSouces[NewsSouces.NEW_YORK_TIMES]: return NewYorkTimesService.Instance;
+      case NewsSouces[NewsSouces.NEWS_API]: return NewsApiService.Instance;
+      default: return null;
+    } 
   }
+  
 }
