@@ -12,15 +12,18 @@ import { NewsService } from './news-service';
 })
 export class TheGuardianService extends AbstractNewsService implements NewsService {
 
-  private THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
-  private serviceUrl: string = super.getServiceURLFromInitMap(this.THE_GUARDIAN);
+  private serviceUrl: string = null;
 
   /**
    * Singleton instance
    */
   private static instance: TheGuardianService = null;
 
-  private constructor() { super(); }
+  private constructor() { 
+    super();
+    const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
+    this.serviceUrl = super.getServiceURLFromInitMap(THE_GUARDIAN);
+  }
 
   static get Instance() {
     if(null === this.instance || undefined === this.instance) {

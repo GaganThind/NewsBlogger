@@ -12,15 +12,18 @@ import { NewsService } from './news-service';
 })
 export class NewYorkTimesService extends AbstractNewsService implements NewsService {
 
-  private NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
-  private serviceUrl: string = super.getServiceURLFromInitMap(this.NEW_YORK_TIMES);
-
+  private serviceUrl: string = null;
+  
   /**
    * Singelton instance
    */
   private static instance: NewYorkTimesService = null;
 
-  private constructor() { super(); }
+  private constructor() { 
+    super(); 
+    const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
+    this.serviceUrl = super.getServiceURLFromInitMap(NEW_YORK_TIMES);
+  }
 
   static get Instance() {
     if(null === this.instance || undefined === this.instance) {

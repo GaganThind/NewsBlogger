@@ -9,15 +9,18 @@ import { NewsService } from './news-service';
 })
 export class NewsApiService extends AbstractNewsService implements NewsService {
   
-  private NEWS_API = NewsSouces[NewsSouces.NEWS_API];
-  private serviceUrl: string = super.getServiceURLFromInitMap(this.NEWS_API);
+  private serviceUrl: string = null;
 
   /**
    * Singleton instance
    */
   private static instance: NewsApiService = null;
 
-  private constructor() { super() }
+  private constructor() { 
+    super(); 
+    const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
+    this.serviceUrl = super.getServiceURLFromInitMap(NEWS_API);
+  }
 
   static get Instance() {
     if(null === this.instance || undefined === this.instance) {
