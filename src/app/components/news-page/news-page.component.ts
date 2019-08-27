@@ -30,7 +30,8 @@ export class NewsPageComponent implements OnInit, OnDestroy {
   FETCH_FRM_NEW_YORK_TIMES: boolean = true;
   FETCH_FRM_NEWS_API: boolean = true;
 
-  private newsFactory = new NewsFactoryService();
+  //News Factory instance
+  private newsFactory = NewsFactoryService.Instance;
 
   constructor() { }
 

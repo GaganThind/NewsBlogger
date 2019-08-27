@@ -11,22 +11,10 @@ export class NewsApiService extends AbstractNewsService implements NewsService {
   
   private serviceUrl: string = null;
 
-  /**
-   * Singleton instance
-   */
-  private static instance: NewsApiService = null;
-
-  private constructor() { 
+  constructor() { 
     super(); 
     const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
     this.serviceUrl = super.getServiceURLFromInitMap(NEWS_API);
-  }
-
-  static get Instance() {
-    if(null === this.instance || undefined === this.instance) {
-      this.instance = new NewsApiService();
-    }
-    return this.instance;
   }
 
   /**

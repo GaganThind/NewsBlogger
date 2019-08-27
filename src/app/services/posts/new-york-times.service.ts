@@ -14,22 +14,10 @@ export class NewYorkTimesService extends AbstractNewsService implements NewsServ
 
   private serviceUrl: string = null;
   
-  /**
-   * Singelton instance
-   */
-  private static instance: NewYorkTimesService = null;
-
-  private constructor() { 
+  constructor() { 
     super(); 
     const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
     this.serviceUrl = super.getServiceURLFromInitMap(NEW_YORK_TIMES);
-  }
-
-  static get Instance() {
-    if(null === this.instance || undefined === this.instance) {
-      this.instance = new NewYorkTimesService();
-    }
-    return this.instance;
   }
 
   /**

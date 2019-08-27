@@ -14,22 +14,10 @@ export class TheGuardianService extends AbstractNewsService implements NewsServi
 
   private serviceUrl: string = null;
 
-  /**
-   * Singleton instance
-   */
-  private static instance: TheGuardianService = null;
-
-  private constructor() { 
+  constructor() { 
     super();
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
     this.serviceUrl = super.getServiceURLFromInitMap(THE_GUARDIAN);
-  }
-
-  static get Instance() {
-    if(null === this.instance || undefined === this.instance) {
-      this.instance = new TheGuardianService();
-    }
-    return this.instance;
   }
 
   /**
