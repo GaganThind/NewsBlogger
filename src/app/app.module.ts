@@ -11,8 +11,7 @@ import { NewsPostComponent } from './components/news-post/news-post.component';
 import { UrlResolverService } from './services/common/url-resolver.service';
 import { CustomErrorHandlerService } from './services/common/custom-error-handler.service';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { AppLoadModule } from '././modules/app-load/app-load.module'
-import { NewsFactoryService } from './services/posts/news-factory.service';
+import { AppLoadModule } from '././modules/app-load/app-load.module';
 import { InjectorModule } from './modules/injector.module';
 
 @NgModule({
@@ -33,7 +32,6 @@ import { InjectorModule } from './modules/injector.module';
   ],
   providers: [
     UrlResolverService,
-    NewsFactoryService,
     {
       provide: ErrorHandler,
       useClass: CustomErrorHandlerService
