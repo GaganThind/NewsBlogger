@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import BaseService from '../common/base.service';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NewsSouces } from 'src/app/util/global-variables';
+import AbstractNewsService from './abstract-news.service';
+import { NewsService } from './news-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NewsApiService extends BaseService {
+export class NewsApiService extends AbstractNewsService implements NewsService {
+  
+  private serviceUrl: string = null;
 
-  private serviceUrl: string;
-
-  constructor(httpClient: HttpClient) {
-    super(httpClient);
+  constructor() { 
+    super(); 
     const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
     this.serviceUrl = super.getServiceURLFromInitMap(NEWS_API);
   }
@@ -24,7 +24,7 @@ export class NewsApiService extends BaseService {
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPosts(): Observable<any> {
-    return super.fetchNewsPosts(this.serviceUrl);
+    return super.fetchDataFromURL(this.serviceUrl);
   }
 
   /**
@@ -34,7 +34,7 @@ export class NewsApiService extends BaseService {
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPostsWithPage(page: number): Observable<any> {
-    return super.fetchNewsPosts(this.serviceUrl + '&page=' + page);
+    return super.fetchDataFromURL(this.serviceUrl + '&page=' + page);
   }
 
 }
