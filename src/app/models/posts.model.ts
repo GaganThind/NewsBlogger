@@ -5,7 +5,7 @@ export class Posts {
     public title: string;
     public url: string;
     public typeOfPostOrSource: string;
-    public date: string
+    public date: string;
 
     constructor(elemnt: any) {
         this.title = elemnt.title;

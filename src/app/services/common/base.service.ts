@@ -29,8 +29,8 @@ export class BaseService {
 
   /**
    * Fetch data from provided url
-   * 
-   * @param url 
+   *
+   * @param url: the URL to hit
    */
   public fetchDataFromURL(url: string): Observable<any> {
     return this.httpClient.get(url);
@@ -38,7 +38,7 @@ export class BaseService {
 
   /**
    * Retrieve the value from desired file by sending the key
-   * 
+   *
    * @param jsonLocation : This parameter is the local json/other file location to retrieve data from
    * @param key : This is the key whose value is to be returned
    */

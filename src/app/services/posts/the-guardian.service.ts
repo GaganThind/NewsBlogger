@@ -14,7 +14,7 @@ export class TheGuardianService extends AbstractNewsService implements NewsServi
 
   private serviceUrl: string = null;
 
-  constructor() { 
+  constructor() {
     super();
     const THE_GUARDIAN = NewsSouces[NewsSouces.THE_GUARDIAN];
     this.serviceUrl = super.getServiceURLFromInitMap(THE_GUARDIAN);
@@ -23,7 +23,7 @@ export class TheGuardianService extends AbstractNewsService implements NewsServi
   /**
   * Fetches the news posts from the The Guardian API service.
   * This method return an Observable which can hen be subscribed.
-  * 
+  *
   * @param url : Specify the url to fetch the data
   */
   fetchNewsPosts(): Observable<any> {
@@ -33,7 +33,7 @@ export class TheGuardianService extends AbstractNewsService implements NewsServi
   /**
    * Fetches the news posts based by pages from the The Guardian API service.
    * This method return an Observable which can hen be subscribed.
-   * 
+   *
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPostsWithPage(page: number): Observable<any> {

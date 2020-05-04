@@ -13,9 +13,9 @@ import { NewsService } from './news-service';
 export class NewYorkTimesService extends AbstractNewsService implements NewsService {
 
   private serviceUrl: string = null;
-  
-  constructor() { 
-    super(); 
+
+  constructor() {
+    super();
     const NEW_YORK_TIMES = NewsSouces[NewsSouces.NEW_YORK_TIMES];
     this.serviceUrl = super.getServiceURLFromInitMap(NEW_YORK_TIMES);
   }
@@ -23,7 +23,7 @@ export class NewYorkTimesService extends AbstractNewsService implements NewsServ
   /**
    * Fetches the news posts from the New York times API service.
    * This method return an Observable which can hen be subscribed.
-   * 
+   *
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPosts(): Observable<any> {
@@ -33,7 +33,7 @@ export class NewYorkTimesService extends AbstractNewsService implements NewsServ
   /**
    * Fetches the news posts based on page from the New York times API service.
    * This method return an Observable which can hen be subscribed.
-   * 
+   *
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPostsWithPage(page: number): Observable<any> {

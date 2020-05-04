@@ -8,11 +8,11 @@ import { NewsService } from './news-service';
   providedIn: 'root'
 })
 export class NewsApiService extends AbstractNewsService implements NewsService {
-  
+
   private serviceUrl: string = null;
 
-  constructor() { 
-    super(); 
+  constructor() {
+    super();
     const NEWS_API = NewsSouces[NewsSouces.NEWS_API];
     this.serviceUrl = super.getServiceURLFromInitMap(NEWS_API);
   }
@@ -20,7 +20,7 @@ export class NewsApiService extends AbstractNewsService implements NewsService {
   /**
    * Fetches the news posts from the News API service.
    * This method return an Observable which can hen be subscribed.
-   * 
+   *
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPosts(): Observable<any> {
@@ -30,7 +30,7 @@ export class NewsApiService extends AbstractNewsService implements NewsService {
   /**
    * Fetches the news posts based by pages from the News API service.
    * This method return an Observable which can hen be subscribed.
-   * 
+   *
    * @param url : Specify the url to fetch the data
    */
   fetchNewsPostsWithPage(page: number): Observable<any> {

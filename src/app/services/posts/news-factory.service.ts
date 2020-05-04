@@ -8,7 +8,6 @@ import { InjectorInstance } from 'src/app/modules/injector.module';
 
 /**
  * News factory class to provide the new services based on input
- * 
  */
 @Injectable({
   providedIn: 'root'
@@ -36,8 +35,8 @@ export class NewsFactoryService {
 
   /**
    * This factory method returns the type of service requested by the user.
-   * 
-   * @param newsSource 
+   *
+   * @param newsSource: News source
    */
   getService(newsSource: string): NewsService {
     switch(newsSource) {
@@ -45,7 +44,6 @@ export class NewsFactoryService {
       case NewsSouces[NewsSouces.NEW_YORK_TIMES]: return this.newYorkSvc;
       case NewsSouces[NewsSouces.NEWS_API]: return this.newsApiSvc;
       default: return null;
-    } 
+    }
   }
-  
 }

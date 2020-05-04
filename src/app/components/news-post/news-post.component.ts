@@ -11,7 +11,7 @@ import { Posts } from '../../models/posts.model';
 })
 export class NewsPostComponent implements OnInit {
 
-  @Input() post: Posts
+  @Input() post: Posts;
   constructor() { }
 
   ngOnInit() {

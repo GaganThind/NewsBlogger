@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 /** This interface provides the default methods that any news service will need to implement */
 export interface NewsService {

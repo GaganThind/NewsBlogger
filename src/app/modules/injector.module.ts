@@ -10,8 +10,8 @@ export let InjectorInstance: Injector;
   declarations: [],
   imports: []
 })
-export class InjectorModule { 
-  
+export class InjectorModule {
+
     constructor(private injector: Injector) {
         InjectorInstance = this.injector;
     }

@@ -9,7 +9,7 @@ export class NavComponent implements OnInit {
 
   @Input('appName') title: String;
   appName: String;
-  
+
   constructor() { }
 
   ngOnInit() {
